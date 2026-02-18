@@ -42,5 +42,17 @@ export interface SpeakProposalMessage extends BaseMessage {
   summary: string;
 }
 
+// Session summary message
+export interface SessionSummaryMessage extends BaseMessage {
+  type: 'session_summary';
+  summary: string;
+  observations: string[];
+  next_steps: {
+    task: string;
+    priority: 'high' | 'medium' | 'low';
+    reason: string;
+  }[];
+}
+
 // Union type for all messages
-export type Message = AudioMessage | TranscriptMessage | StatusMessage | ErrorMessage | SpeakProposalMessage;
+export type Message = AudioMessage | TranscriptMessage | StatusMessage | ErrorMessage | SpeakProposalMessage | SessionSummaryMessage;

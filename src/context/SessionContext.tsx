@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
-import type { Message } from '../types/messages';
+import type { Message, SessionSummaryMessage } from '../types/messages';
 import type { SessionConfig, ConnectionState, ConnectionStatus, TransportType } from '../types/session';
 import type { TransportAdapter } from '../adapters/TransportAdapter';
 import { WebSocketTransport } from '../adapters/WebSocketTransport';
@@ -31,6 +31,8 @@ export interface SessionContextValue {
   messages: Message[];
   addMessage: (message: Message) => void;
   clearMessages: () => void;
+  sessionSummary: SessionSummaryMessage | null;
+  clearSessionSummary: () => void;
 
   // Connection
   connectionState: ConnectionState;
@@ -81,6 +83,9 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
   // Speak proposals state
   const [speakProposals, setSpeakProposals] = useState<SpeakProposal[]>([]);
+
+  // Session summary state
+  const [sessionSummary, setSessionSummary] = useState<SessionSummaryMessage | null>(null);
 
   // Connection state
   const [connectionState, setConnectionState] = useState<ConnectionState>({
@@ -202,6 +207,11 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
       setSpeakProposals((prev) => [...prev, proposal]);
     }
+
+    // Handle session summary
+    if (message.type === 'session_summary') {
+      setSessionSummary(message as SessionSummaryMessage);
+    }
   }, []);
 
   // Update ref when callback changes
@@ -214,6 +224,13 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
    */
   const clearMessages = useCallback(() => {
     setMessages([]);
+  }, []);
+
+  /**
+   * Clear session summary
+   */
+  const clearSessionSummary = useCallback(() => {
+    setSessionSummary(null);
   }, []);
 
   /**
@@ -512,6 +529,8 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     messages,
     addMessage,
     clearMessages,
+    sessionSummary,
+    clearSessionSummary,
     connectionState,
     connect,
     disconnect,

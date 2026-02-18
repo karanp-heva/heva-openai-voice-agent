@@ -9,6 +9,7 @@ import { VoiceControls } from './components/VoiceControls';
 import { SpeakProposal } from './components/SpeakProposal';
 import { AudioPlayer } from './components/AudioPlayer';
 import { ReasoningPanel } from './components/ReasoningPanel';
+import { SessionSummary } from './components/SessionSummary';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 /**
@@ -53,7 +54,7 @@ const AppContent: React.FC = () => {
    */
   const handleSendTestMessage = useCallback(async () => {
     if (!isConnected) return;
-    
+
     try {
       await sendMessage({
         type: 'test',
@@ -70,7 +71,7 @@ const AppContent: React.FC = () => {
    */
   const handleCancelResponse = useCallback(async () => {
     if (!isConnected) return;
-    
+
     try {
       await sendMessage({
         type: 'response.cancel',
@@ -85,7 +86,7 @@ const AppContent: React.FC = () => {
    */
   const handleReconnect = useCallback(() => {
     if (!isConnected) return;
-    
+
     try {
       reconnect();
     } catch (error) {
@@ -253,10 +254,10 @@ const AppContent: React.FC = () => {
           </div>
         </footer>
       </div>
-      
+
       {/* Audio Player - Plays incoming audio from agent */}
       <AudioPlayer />
-      
+
       {/* Speak Proposals - Floating notifications */}
       {speakProposals.map((proposal) => (
         <SpeakProposal
@@ -267,6 +268,9 @@ const AppContent: React.FC = () => {
           onDeny={denySpeakProposal}
         />
       ))}
+
+      {/* Session Summary Modal */}
+      <SessionSummary />
     </div>
   );
 };
