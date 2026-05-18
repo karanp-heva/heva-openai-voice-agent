@@ -420,7 +420,7 @@ export const ConsultationRoom: React.FC = () => {
               <div className="transcript-empty">
                 {isActive
                   ? 'Waiting for speech…'
-                  : isIdle || status === 'error'
+                  : isIdle
                   ? 'Transcript will appear here once a session begins.'
                   : ''}
               </div>
